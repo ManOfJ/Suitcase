@@ -1,0 +1,8 @@
+
+repositories {
+  maven { url 'http://maven.manofj.com/' }
+}
+
+dependencies {
+  compile group: 'com.manofj.commons.minecraft', name: 'commons-minecraft_1.10.2', version: '1.0'
+}
