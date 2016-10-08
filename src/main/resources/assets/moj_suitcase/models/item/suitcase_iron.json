@@ -1,0 +1,6 @@
+{
+    "parent": "moj_suitcase:item/suitcase",
+    "textures": {
+        "layer0": "moj_suitcase:items/suitcase_iron"
+    }
+}
