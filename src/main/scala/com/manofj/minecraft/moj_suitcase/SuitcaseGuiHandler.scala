@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler
 
 import com.manofj.minecraft.moj_suitcase.gui.GuiSuitcase
 import com.manofj.minecraft.moj_suitcase.inventory.ContainerSuitcase
-import com.manofj.minecraft.moj_suitcase.inventory.InventorySuitcase
+import com.manofj.minecraft.moj_suitcase.inventory.InventorySuitcaseImpl
 import com.manofj.minecraft.moj_suitcase.item.ItemSuitcase
 
 
@@ -16,7 +16,11 @@ object SuitcaseGuiHandler
 {
 
   private[ this ] def suitcaseInventory( player: EntityPlayer ) =
-    ItemSuitcase.getHeldSuitcase( player ).flatMap( InventorySuitcase.create ).headOption
+    ItemSuitcase.getHeldSuitcase( player )
+      .headOption
+      .flatMap( x => Option( x.getCapability( Suitcase.capability, null ) ) )
+      //TODO: 旧データ引き継ぎ処理 - Minecraft 1.11で削除
+      .map { case x: InventorySuitcaseImpl => x.loadOldVersionItems(); x }
 
 
   override def getClientGuiElement( ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int ): AnyRef = {

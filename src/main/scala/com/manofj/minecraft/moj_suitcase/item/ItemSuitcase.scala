@@ -5,17 +5,25 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.util.ActionResult
 import net.minecraft.util.EnumHand
 import net.minecraft.world.World
+
+import net.minecraftforge.common.capabilities.ICapabilityProvider
 
 import com.manofj.commons.scala.alias.java.Collection.JavaList
 
 import com.manofj.minecraft.moj_suitcase.Suitcase
 import com.manofj.minecraft.moj_suitcase.entity.EntityItemSuitcase
+import com.manofj.minecraft.moj_suitcase.init.SuitcaseItems
+import com.manofj.minecraft.moj_suitcase.inventory.InventorySuitcaseProvider
 
 
 object ItemSuitcase {
+
+  def isSuitcaseItem( item: Item ): Boolean =
+    item == SuitcaseItems.SUITCASE
 
   def isSuitcaseItem( stack: ItemStack ): Boolean =
     Option( stack ).map( _.getItem ) match {
@@ -30,7 +38,8 @@ object ItemSuitcase {
     player.getHeldEquipment.toIndexedSeq.filter( isSuitcaseItem )
   }
 
-  def getMaterial( stack: ItemStack ): SuitcaseMaterial = SuitcaseMaterial.byMetadata( stack.getMetadata )
+  def getMaterial( stack: ItemStack ): SuitcaseMaterial =
+    if ( stack.getItem eq null ) SuitcaseMaterial.DIAMOND else SuitcaseMaterial.byMetadata( stack.getMetadata )
 
 }
 
@@ -48,8 +57,11 @@ class ItemSuitcase
     setCreativeTab( CreativeTabs.MISC )
   }
 
+  override def initCapabilities( stack: ItemStack, nbt: NBTTagCompound ): ICapabilityProvider =
+    new InventorySuitcaseProvider( stack )
 
-  override def hasCustomEntity( stack: ItemStack ): Boolean = isSuitcaseItem( stack )
+  override def hasCustomEntity( stack: ItemStack ): Boolean =
+    isSuitcaseItem( stack )
 
   override def createEntity( world: World, location: Entity, stack: ItemStack ): Entity =
     new EntityItemSuitcase( world, location, stack )
