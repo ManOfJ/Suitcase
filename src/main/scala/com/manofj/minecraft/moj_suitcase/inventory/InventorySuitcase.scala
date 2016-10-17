@@ -6,8 +6,11 @@ import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.InventoryBasic
 import net.minecraft.item.ItemStack
 
+import com.manofj.commons.scala.util.conversions.Boolean$
+
 import com.manofj.commons.minecraft.inventory.IInventoryUtils
 
+import com.manofj.minecraft.moj_suitcase.item.ItemSuitcase
 import com.manofj.minecraft.moj_suitcase.item.SuitcaseMaterial
 
 
@@ -15,10 +18,13 @@ object InventorySuitcase {
 
   final val active = CacheBuilder.newBuilder.weakKeys.build[ EntityPlayer, InventorySuitcase ]
 
+  def create( stack: ItemStack ): Option[ InventorySuitcase ] =
+    ItemSuitcase.isSuitcaseItem( stack ).map( new InventorySuitcase( stack, ItemSuitcase.getMaterial( stack ) ) )
+
 }
 
 class InventorySuitcase( suitcase: ItemStack, material: SuitcaseMaterial )
-  extends InventoryBasic( "", false, material.capacity )
+  extends InventoryBasic( suitcase.getDisplayName, true, material.capacity )
 {
 
   def readInventoryItems(): Unit = {
@@ -31,8 +37,6 @@ class InventorySuitcase( suitcase: ItemStack, material: SuitcaseMaterial )
     suitcase.setTagInfo( "SuitcaseInventory", tag )
   }
 
-
-  override def getName: String = suitcase.getDisplayName
 
   override def openInventory( player: EntityPlayer ): Unit = {
     InventorySuitcase.active.put( player, this )

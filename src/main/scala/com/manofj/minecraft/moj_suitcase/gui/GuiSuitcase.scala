@@ -21,10 +21,12 @@ class GuiSuitcase( playerInventory: IInventory, suitcaseInventory: IInventory, p
 
   private[ this ] final val inventoryRows = suitcaseInventory.getSizeInventory / 9
 
+
   {
     allowUserInput = false
     ySize = 114 + inventoryRows * 18
   }
+
 
   override def drawGuiContainerBackgroundLayer( partialTicks: Float, mouseX: Int, mouseY: Int ): Unit = {
     GlStateManager.color( 1.0F, 1.0F, 1.0F, 1.0F )

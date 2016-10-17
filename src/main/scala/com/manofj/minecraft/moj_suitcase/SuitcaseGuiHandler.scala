@@ -15,18 +15,19 @@ object SuitcaseGuiHandler
   extends IGuiHandler
 {
 
-  private[ this ] def suitcaseInventory( player: EntityPlayer ): InventorySuitcase =
-    ItemSuitcase.getHeldSuitcase( player ).flatMap( ItemSuitcase.createSuitcaseInventory ).head
+  private[ this ] def suitcaseInventory( player: EntityPlayer ) =
+    ItemSuitcase.getHeldSuitcase( player ).flatMap( InventorySuitcase.create ).headOption
+
 
   override def getClientGuiElement( ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int ): AnyRef = {
     ID match {
-      case 0 => new GuiSuitcase( player.inventory, suitcaseInventory( player ), player )
+      case 0 => suitcaseInventory( player ).map( new GuiSuitcase( player.inventory, _, player ) ).orNull
     }
   }
 
   override def getServerGuiElement( ID: Int, player: EntityPlayer, world: World, x: Int, y: Int, z: Int ): AnyRef = {
     ID match {
-      case 0 => new ContainerSuitcase( player.inventory, suitcaseInventory( player ), player )
+      case 0 => suitcaseInventory( player ).map( new ContainerSuitcase( player.inventory, _, player ) ).orNull
     }
   }
 

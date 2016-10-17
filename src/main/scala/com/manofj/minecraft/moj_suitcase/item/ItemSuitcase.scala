@@ -13,22 +13,19 @@ import com.manofj.commons.scala.alias.java.Collection.JavaList
 
 import com.manofj.minecraft.moj_suitcase.Suitcase
 import com.manofj.minecraft.moj_suitcase.entity.EntityItemSuitcase
-import com.manofj.minecraft.moj_suitcase.inventory.InventorySuitcase
-import com.manofj.commons.scala.util.conversions.Boolean$
+
 
 object ItemSuitcase {
 
   def isSuitcaseItem( stack: ItemStack ): Boolean =
     Option( stack ).map( _.getItem ) match {
       case Some( _: ItemSuitcase ) => true
-      case _ => false
+      case _                       => false
     }
-
-  def createSuitcaseInventory( stack: ItemStack ): Option[ InventorySuitcase ] =
-    isSuitcaseItem( stack ) ? Some( new InventorySuitcase( stack, getMaterial( stack ) ) ) ! None
 
   def getHeldSuitcase( player: EntityPlayer ): Seq[ ItemStack ] = {
     import scala.collection.convert.WrapAsScala.iterableAsScalaIterable
+
 
     player.getHeldEquipment.toIndexedSeq.filter( isSuitcaseItem )
   }
@@ -40,32 +37,38 @@ object ItemSuitcase {
 class ItemSuitcase
   extends Item
 {
+  import com.manofj.minecraft.moj_suitcase.item.ItemSuitcase._
+
 
   {
     setMaxStackSize( 1 )
-    setHasSubtypes( true )
     setMaxDamage( 0 )
+    setHasSubtypes( true )
     setUnlocalizedName( "[ THIS IS ILLEGAL ITEM ]" )
     setCreativeTab( CreativeTabs.MISC )
   }
 
 
-  override def hasCustomEntity( stack: ItemStack ): Boolean = true
+  override def hasCustomEntity( stack: ItemStack ): Boolean = isSuitcaseItem( stack )
 
   override def createEntity( world: World, location: Entity, stack: ItemStack ): Entity =
-    new EntityItemSuitcase( world, location, this, stack )
+    new EntityItemSuitcase( world, location, stack )
 
   override def onItemRightClick( itemStackIn: ItemStack,
                                  worldIn:     World,
                                  playerIn:    EntityPlayer,
                                  hand:        EnumHand ): ActionResult[ ItemStack ] =
   {
-    if ( !worldIn.isRemote ) playerIn.openGui( Suitcase, 0, worldIn, 0, 0, 0 )
+    if ( !worldIn.isRemote ) {
+      playerIn.openGui( Suitcase, 0, worldIn, 0, 0, 0 )
+    }
+
     super.onItemRightClick( itemStackIn, worldIn, playerIn, hand )
   }
 
   override def getSubItems( itemIn: Item, tab: CreativeTabs, subItems: JavaList[ ItemStack ] ): Unit = {
     import scala.collection.convert.WrapAsScala.asScalaBuffer
+
 
     SuitcaseMaterial.ALL.foreach { material =>
       subItems.add( new ItemStack( itemIn, 1, material.metadata ) )
@@ -73,6 +76,6 @@ class ItemSuitcase
   }
 
   override def getUnlocalizedName( stack: ItemStack ): String =
-    "item." + Suitcase.languageKey( ItemSuitcase.getMaterial( stack ).suitcaseId )
+    "item." + Suitcase.languageKey( getMaterial( stack ).suitcaseId )
 
 }
