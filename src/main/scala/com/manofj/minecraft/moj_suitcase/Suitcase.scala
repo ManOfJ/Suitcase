@@ -1,14 +1,15 @@
 package com.manofj.minecraft.moj_suitcase
 
 import net.minecraftforge.fml.common.Mod
+import net.minecraftforge.fml.common.SidedProxy
+import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
-import net.minecraftforge.fml.common.network.NetworkRegistry
 
 import com.manofj.commons.minecraftforge.base.MinecraftForgeMod
 import com.manofj.commons.minecraftforge.i18n.I18nSupportMod
 import com.manofj.commons.minecraftforge.resource.ResourceLocationMakerMod
 
-import com.manofj.minecraft.moj_suitcase.init.SuitcaseItems
+import com.manofj.minecraft.moj_suitcase.init.SuitcaseInitializer
 
 
 @Mod( modid       = Suitcase.modId,
@@ -28,11 +29,13 @@ object Suitcase
 
 //  final val modGuiFactory: String = ""
 
+  @SidedProxy( modId      = Suitcase.modId,
+               serverSide = "com.manofj.minecraft.moj_suitcase.init.SuitcaseCommonInitializer",
+               clientSide = "com.manofj.minecraft.moj_suitcase.init.SuitcaseClientInitializer" )
+  var initializer: SuitcaseInitializer = null
 
-  @Mod.EventHandler
-  def preInit( event: FMLPreInitializationEvent ): Unit = {
-    SuitcaseItems.init()
-    NetworkRegistry.INSTANCE.registerGuiHandler( this, SuitcaseGuiHandler )
-  }
+
+  @Mod.EventHandler def preInit( event: FMLPreInitializationEvent ): Unit = initializer.preInit( event )
+  @Mod.EventHandler def init( event: FMLInitializationEvent ): Unit = initializer.init( event )
 
 }
