@@ -15,10 +15,15 @@ import com.manofj.minecraft.moj_suitcase.item.SuitcaseMaterial
 object SuitcaseItems {
   import scala.collection.convert.WrapAsScala.asScalaBuffer
 
+
   final val SUITCASE = new ItemSuitcase
 
 
-  private[ init ] def registerModels(): Unit = {
+  private[ init ] def preInit(): Unit = {
+    GameRegistry.register( SUITCASE, Suitcase.resourceLocation( "suitcase" ) )
+  }
+
+  private[ init ] def preInitClient(): Unit = {
     SuitcaseMaterial.ALL.foreach { material =>
       val name = Suitcase.resourceLocation( material.suitcaseId )
       val location = new ModelResourceLocation( name, "inventory" )
@@ -27,11 +32,9 @@ object SuitcaseItems {
     }
   }
 
-  private[ moj_suitcase ] def init(): Unit = {
-    GameRegistry.register( SUITCASE, Suitcase.resourceLocation( "suitcase" ) )
+  private[ init ] def init(): Unit = {
 
     SuitcaseMaterial.ALL.foreach { material =>
-
       GameRegistry.addRecipe( new ItemStack( SUITCASE, 1, material.metadata ), Seq(
         "LLL",
         "MMM",
@@ -39,8 +42,8 @@ object SuitcaseItems {
         'L': Character, Items.LEATHER,
         'M': Character, material.item
       ): _* )
-
     }
+
   }
 
 }

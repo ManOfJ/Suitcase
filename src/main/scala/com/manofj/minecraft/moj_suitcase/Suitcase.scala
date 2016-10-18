@@ -1,20 +1,26 @@
 package com.manofj.minecraft.moj_suitcase
 
+import scala.annotation.meta.setter
+
+import net.minecraftforge.common.capabilities.Capability
+import net.minecraftforge.common.capabilities.CapabilityInject
 import net.minecraftforge.fml.common.Mod
+import net.minecraftforge.fml.common.SidedProxy
+import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
-import net.minecraftforge.fml.common.network.NetworkRegistry
 
 import com.manofj.commons.minecraftforge.base.MinecraftForgeMod
 import com.manofj.commons.minecraftforge.i18n.I18nSupportMod
 import com.manofj.commons.minecraftforge.resource.ResourceLocationMakerMod
 
-import com.manofj.minecraft.moj_suitcase.init.SuitcaseItems
+import com.manofj.minecraft.moj_suitcase.init.SuitcaseInitializer
+import com.manofj.minecraft.moj_suitcase.inventory.InventorySuitcase
 
 
 @Mod( modid       = Suitcase.modId,
       name        = Suitcase.modName,
       version     = Suitcase.modVersion,
-//      guiFactory  = Suitcase.modGuiFactory,
+      guiFactory  = Suitcase.modGuiFactory,
       modLanguage = Suitcase.modLanguage )
 object Suitcase
   extends MinecraftForgeMod
@@ -26,13 +32,20 @@ object Suitcase
   override final val modName    = "Suitcase"
   override final val modVersion = "@version@"
 
-//  final val modGuiFactory: String = ""
+  final val modGuiFactory = "com.manofj.minecraft.moj_suitcase.SuitcaseConfigGuiFactory"
 
 
-  @Mod.EventHandler
-  def preInit( event: FMLPreInitializationEvent ): Unit = {
-    SuitcaseItems.init()
-    NetworkRegistry.INSTANCE.registerGuiHandler( this, SuitcaseGuiHandler )
-  }
+  @SidedProxy( modId      = Suitcase.modId,
+               serverSide = "com.manofj.minecraft.moj_suitcase.init.SuitcaseCommonInitializer",
+               clientSide = "com.manofj.minecraft.moj_suitcase.init.SuitcaseClientInitializer" )
+  var initializer: SuitcaseInitializer = null
+
+
+  @( CapabilityInject @ setter )( classOf[ InventorySuitcase ] )
+  var capability: Capability[ InventorySuitcase ] = null
+
+
+  @Mod.EventHandler def preInit( event: FMLPreInitializationEvent ): Unit = initializer.preInit( event )
+  @Mod.EventHandler def init( event: FMLInitializationEvent ): Unit = initializer.init( event )
 
 }

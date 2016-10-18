@@ -14,6 +14,7 @@ class SuitcaseSlot( base: Slot )
     slotNumber = base.slotNumber
   }
 
+
   override def isItemValid( stack: ItemStack ): Boolean = !ItemSuitcase.isSuitcaseItem( stack )
 
 }

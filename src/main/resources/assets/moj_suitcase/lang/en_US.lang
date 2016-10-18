@@ -1,3 +1,7 @@
 item.moj_suitcase.suitcase_iron.name=Iron Suitcase
 item.moj_suitcase.suitcase_gold.name=Gold Suitcase
 item.moj_suitcase.suitcase_diamond.name=Diamond Suitcase
+
+moj_suitcase.gui.config.title=Suitcase Config
+moj_suitcase.config.search_from_all=Suitcase search from all
+moj_suitcase.config.search_from_all.tooltip=if 'true' case, disable the restriction of auto store function

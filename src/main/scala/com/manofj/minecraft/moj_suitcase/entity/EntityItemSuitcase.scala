@@ -9,24 +9,23 @@ import net.minecraft.world.World
 
 import com.manofj.commons.scala.util.conversions.Any$
 
-import com.manofj.minecraft.moj_suitcase.item.ItemSuitcase
+import com.manofj.minecraft.moj_suitcase.Suitcase
 
 
-class EntityItemSuitcase( world: World, location: Entity, suitcase: ItemSuitcase, stack: ItemStack )
+class EntityItemSuitcase( world: World, location: Entity, stack: ItemStack )
   extends EntityItem( world )
 {
 
   {
-    readFromNBT( location.serializeNBT() )
+    this.readFromNBT( location.serializeNBT )
   }
 
 
   override def attackEntityFrom( source: DamageSource, amount: Float ): Boolean =
-    super.attackEntityFrom( source, amount ) << { _=>
+    super.attackEntityFrom( source, amount ) << { _ =>
       // ダメージを受けて消滅する際にインベントリ内のアイテムを周囲にぶちまける
       if ( !worldObj.isRemote && !isEntityAlive ) {
-        ItemSuitcase.createSuitcaseInventory( getEntityItem ).foreach { inventory =>
-          inventory.readInventoryItems()
+        getEntityItem.getCapability( Suitcase.capability, null ) >> { inventory =>
           InventoryHelper.dropInventoryItems( world, this, inventory )
       } }
     }

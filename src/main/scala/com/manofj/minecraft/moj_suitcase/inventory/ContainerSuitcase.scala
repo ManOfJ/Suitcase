@@ -13,6 +13,7 @@ class ContainerSuitcase( playerInventory: IInventory, suitcaseInventory: IInvent
     import scala.collection.convert.WrapAsJava.seqAsJavaList
     import scala.collection.convert.WrapAsScala.iterableAsScalaIterable
 
+
     val newInventorySlots = inventorySlots.toIndexedSeq.map {
       case slot if slot.inventory == suitcaseInventory => new SuitcaseSlot( slot )
       case slot => slot
