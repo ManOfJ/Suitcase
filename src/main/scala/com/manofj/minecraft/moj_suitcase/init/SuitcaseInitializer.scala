@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.network.NetworkRegistry
 
 import com.manofj.minecraft.moj_suitcase.Suitcase
+import com.manofj.minecraft.moj_suitcase.SuitcaseConfig
 import com.manofj.minecraft.moj_suitcase.SuitcaseGuiHandler
 import com.manofj.minecraft.moj_suitcase.inventory.DummyInventorySuitcase
 import com.manofj.minecraft.moj_suitcase.inventory.InventorySuitcase
@@ -21,6 +22,8 @@ class SuitcaseCommonInitializer
   extends SuitcaseInitializer
 {
   override def preInit( event: FMLPreInitializationEvent ): Unit = {
+    SuitcaseConfig.capture( event.getSuggestedConfigurationFile )
+
     SuitcaseItems.preInit()
 
     CapabilityManager.INSTANCE.register(

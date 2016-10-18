@@ -1,3 +1,7 @@
 item.moj_suitcase.suitcase_iron.name=鉄のスーツケース
 item.moj_suitcase.suitcase_gold.name=金のスーツケース
 item.moj_suitcase.suitcase_diamond.name=ダイヤのスーツケース
+
+moj_suitcase.gui.config.title=Suitcase コンフィグ
+moj_suitcase.config.search_from_all=すべてのスーツケースを検索
+moj_suitcase.config.search_from_all.tooltip='true'で自動収納機能の手持ち制限を解除します

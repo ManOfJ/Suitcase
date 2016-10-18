@@ -20,7 +20,7 @@ import com.manofj.minecraft.moj_suitcase.inventory.InventorySuitcase
 @Mod( modid       = Suitcase.modId,
       name        = Suitcase.modName,
       version     = Suitcase.modVersion,
-//      guiFactory  = Suitcase.modGuiFactory,
+      guiFactory  = Suitcase.modGuiFactory,
       modLanguage = Suitcase.modLanguage )
 object Suitcase
   extends MinecraftForgeMod
@@ -32,7 +32,8 @@ object Suitcase
   override final val modName    = "Suitcase"
   override final val modVersion = "@version@"
 
-//  final val modGuiFactory: String = ""
+  final val modGuiFactory = "com.manofj.minecraft.moj_suitcase.SuitcaseConfigGuiFactory"
+
 
   @SidedProxy( modId      = Suitcase.modId,
                serverSide = "com.manofj.minecraft.moj_suitcase.init.SuitcaseCommonInitializer",

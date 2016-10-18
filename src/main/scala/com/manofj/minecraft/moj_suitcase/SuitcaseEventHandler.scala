@@ -1,5 +1,7 @@
 package com.manofj.minecraft.moj_suitcase
 
+import net.minecraft.item.ItemStack
+
 import net.minecraftforge.event.AttachCapabilitiesEvent
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent
 import net.minecraftforge.fml.common.Mod
@@ -56,8 +58,14 @@ object SuitcaseEventHandler {
         event.setCanceled( itemEntity.isDead )
       }
 
+    val suitcases = IndexedSeq.newBuilder[ ItemStack ]
 
-    ItemSuitcase.getHeldSuitcase( player )
+    suitcases ++= ItemSuitcase.getHeldSuitcase( player )
+    if ( SuitcaseConfig.searchFromAll ) {
+      suitcases ++= wrapRefArray( player.inventory.mainInventory ).filter( ItemSuitcase.isSuitcaseItem )
+    }
+
+    suitcases.result.distinct
       .withFilter( _ => !event.isCanceled )
       .foreach { _
         .getCapability( Suitcase.capability, null ) match {
